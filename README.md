@@ -1,4 +1,4 @@
-> **Caso de estudio: migración MySQL → PostgreSQL — Curso Integrador I (UTP).** Copia del proyecto BikeCare (grupo Ventura Verano Carlos) usada para documentar la migración de MySQL a PostgreSQL y el despliegue de una aplicación Spring Boot con Thymeleaf.
+> **Caso de estudio: migración MySQL → PostgreSQL — Curso Integrador I (UTP).** Copia del proyecto BikeCare usada para documentar la migración de MySQL a PostgreSQL y el despliegue de una aplicación Spring Boot con Thymeleaf.
 >
 > | Componente | Servicio | URL |
 > |---|---|---|
