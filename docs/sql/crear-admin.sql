@@ -15,12 +15,12 @@
 
 -- 1) Asegurar el rol ADMIN (no duplica si ya existe)
 INSERT INTO rol (nombre_rol)
-SELECT 'ADMIN' FROM DUAL
+SELECT 'ADMIN'  -- PostgreSQL no usa FROM DUAL
 WHERE NOT EXISTS (SELECT 1 FROM rol WHERE nombre_rol = 'ADMIN');
 
 -- 2) Crear el administrador (no duplica si el correo ya existe)
 INSERT INTO usuario (id_rol, nombre, apellidos, correo, contrasenia, es_premium)
-SELECT r.id_rol, 'Admin', 'BikeCare', 'CAMBIAR@dominio.com', 'CAMBIAR_CLAVE', 0
+SELECT r.id_rol, 'Admin', 'BikeCare', 'CAMBIAR@dominio.com', 'CAMBIAR_CLAVE', false
 FROM rol r
 WHERE r.nombre_rol = 'ADMIN'
   AND NOT EXISTS (SELECT 1 FROM usuario u WHERE u.correo = 'CAMBIAR@dominio.com');
