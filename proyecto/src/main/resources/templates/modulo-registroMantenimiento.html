@@ -1,0 +1,137 @@
+<div th:fragment="moduloMantenimiento" class="contenedor-modulo mant-module">
+    <link rel="stylesheet" th:href="@{/css/styleRegistroMantenimiento.css}">
+
+    <header class="mant-head">
+        <h1>Registro de Mantenimiento</h1>
+        <p>Registra los servicios realizados a tus bicicletas.</p>
+    </header>
+
+    <div th:if="${#lists.isEmpty(bicicletas)}" class="mant-aviso">
+        No tienes bicicletas registradas.
+        <a th:href="@{/welcome/garaje/registrarBici}">Registra una bicicleta</a>
+        para poder guardar mantenimientos.
+    </div>
+
+    <form th:if="${!#lists.isEmpty(bicicletas)}" th:action="@{/welcome/mantenimiento}"
+          method="post" class="mant-form">
+        <div class="mant-field">
+            <label for="idBicicleta">Bicicleta *</label>
+            <select id="idBicicleta" name="idBicicleta" required>
+                <option value="" disabled selected>Selecciona una bicicleta...</option>
+                <option th:each="b : ${bicicletas}" th:value="${b.idBicicleta}"
+                        th:attr="data-km=${b.kilometrajeTotal}"
+                        th:text="${b.marca + ' ' + b.modelo + ' (' + b.kilometrajeTotal + ' km)'}">
+                    Trek Marlin 8 (1250 km)
+                </option>
+            </select>
+        </div>
+
+        <div class="mant-field">
+            <label for="fechaServicio">Fecha del servicio *</label>
+            <input type="date" id="fechaServicio" name="fechaServicio"
+                   th:value="${hoy}" th:max="${hoy}" required>
+        </div>
+
+        <div class="mant-field">
+            <label for="tipoServicio">Tipo de mantenimiento *</label>
+            <select id="tipoServicio" name="tipoServicio" required>
+                <option value="" disabled selected>Selecciona...</option>
+                <option value="Preventivo">Preventivo</option>
+                <option value="Correctivo">Correctivo</option>
+                <option value="Limpieza">Limpieza</option>
+                <option value="Ajuste">Ajuste</option>
+                <option value="Cambio de componente">Cambio de componente</option>
+            </select>
+        </div>
+
+        <div class="mant-field mant-field--full" id="campoComponentes" hidden>
+            <label>Componentes reemplazados *</label>
+            <small class="mant-hint">
+                Selecciona uno o varios componentes. Su kilometraje acumulado se reiniciará a 0 km.
+            </small>
+
+            <div th:each="b : ${bicicletas}" class="mant-componentes-grupo"
+                 th:attr="data-bici=${b.idBicicleta}" hidden>
+                <p th:if="${#lists.isEmpty(componentesPorBici.get(b.idBicicleta))}"
+                   class="mant-componentes-vacio">
+                    Esta bicicleta no tiene componentes activos registrados.
+                </p>
+                <div th:unless="${#lists.isEmpty(componentesPorBici.get(b.idBicicleta))}"
+                     class="mant-componentes-grid">
+                    <label th:each="bc : ${componentesPorBici.get(b.idBicicleta)}" class="mant-componente">
+                        <input type="checkbox" name="componentes" th:value="${bc.idBicicletaComponente}">
+                        <span class="mant-componente-info">
+                            <span class="mant-componente-nombre" th:text="${bc.componente.nombre}">Cadena</span>
+                            <span class="mant-componente-meta"
+                                  th:text="|${bc.componente.categoria} · ${#numbers.formatDecimal(bc.kilometrajeAcumulado, 1, 'COMMA', 1, 'POINT')} km acumulados|">
+                                Transmisión · 1,250.0 km acumulados
+                            </span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <small id="componentesError" class="mant-hint mant-hint--alerta" hidden>
+                Selecciona al menos un componente para el cambio.
+            </small>
+        </div>
+
+        <div class="mant-field">
+            <label for="kilometrajeServicio">Kilometraje de la bici (km)</label>
+            <input type="number" id="kilometrajeServicio" name="kilometrajeServicio"
+                   min="0.01" max="99999999.99" step="0.01"
+                   placeholder="Se completa al elegir la bicicleta" autocomplete="off" required>
+            <small id="kmHint" class="mant-hint">
+                Selecciona una bici para rellenar este campo
+            </small>
+        </div>
+
+        <div class="mant-field">
+            <label for="costo">Costo (S/)</label>
+            <input type="number" id="costo" name="costo"
+                   min="0" max="999999.99" step="0.01" placeholder="0.00">
+        </div>
+
+        <div class="mant-field">
+            <label for="tallerMecanico">Taller mecánico</label>
+            <input type="text" id="tallerMecanico" name="tallerMecanico"
+                   maxlength="100" placeholder="Opcional">
+        </div>
+
+        <div class="mant-field mant-field--full">
+            <label for="descripcion">Notas / descripción</label>
+            <textarea id="descripcion" name="descripcion" rows="3"
+                      placeholder="Detalles del servicio..."></textarea>
+        </div>
+
+        <button type="submit" class="mant-btn">Guardar mantenimiento</button>
+    </form>
+
+    <section class="mant-lista">
+        <h2>Últimos mantenimientos</h2>
+
+        <p th:if="${#lists.isEmpty(mantenimientos)}" class="mant-vacio">
+            Aún no hay registros.
+        </p>
+
+        <ul th:if="${!#lists.isEmpty(mantenimientos)}" class="mant-items">
+            <li th:each="m : ${mantenimientos}" class="mant-item">
+                <div class="mant-item-main">
+                    <b th:text="${m.tipoServicio}">Preventivo</b>
+                    <span th:text="|${m.bicicleta.marca} ${m.bicicleta.modelo}|">Trek Marlin 8</span>
+                </div>
+                <div class="mant-item-meta">
+                    <span th:text="${m.fechaServicio}">2026-10-25</span>
+                    <span th:text="|${m.kilometrajeServicio} km|">1250.50 km</span>
+                    <span th:if="${m.costo != null}"
+                          th:text="|S/ ${#numbers.formatDecimal(m.costo, 1, 'COMMA', 2, 'POINT')}|">S/ 0.00</span>
+                    <span th:if="${m.tallerMecanico != null}" th:text="${m.tallerMecanico}">Taller</span>
+                </div>
+                <p th:if="${m.descripcion != null}" th:text="${m.descripcion}"
+                   class="mant-item-notas">Cambio de cadena</p>
+            </li>
+        </ul>
+    </section>
+
+    <script th:src="@{/js/registroMantenimiento.js}"></script>
+</div>

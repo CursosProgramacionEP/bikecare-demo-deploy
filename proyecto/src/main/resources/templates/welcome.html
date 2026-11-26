@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <html xmlns="https://www.thymeleaf.org">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BikeCare | Panel principal</title>
+    <link rel="stylesheet" th:href="@{/css/styleWelcome.css}">
+</head>
+
+<body>
+    <th:block th:replace="~{fragments/alerts :: messages}"></th:block>
+
+
+    <div class="container-app">
+
+        <aside class="sidebar">
+
+            <div class="sidebar-header">
+                <div class="brand">
+                    <img th:src="@{/img/logo-bikecare.jpeg}" alt="">
+                    <div class="brand-text">
+                        <p class="brand-name">BikeCare</p>
+                        <p class="brand-sub">CYCLING CARE PLATFORM</p>
+                    </div>
+                </div>
+            </div>
+
+            <ul>
+                <li><a th:href="@{/welcome/panelControl}">
+                        <span class="nav-icon">&#128202;</span> Panel de Control
+                    </a>
+                </li>
+
+                <li><a th:href="@{/welcome/garaje}">
+                        <span class="nav-icon">&#128692;</span> Mi Garaje
+                    </a>
+                </li>
+
+                <li><a th:href="@{/welcome/registroRuta}">
+                        <span class="nav-icon">&#128214;</span> Registro de Rutas
+                    </a>
+                </li>
+
+                <li><a th:href="@{/welcome/diagnosticoIA}">
+                        <span class="nav-icon">&#10024;</span> Diagnóstico IA
+                    </a>
+                </li>
+
+                <li><a th:href="@{/welcome/historial}">
+                        <span class="nav-icon">&#128337;</span> Historial
+                    </a>
+                </li>
+
+                <li><a th:href="@{/welcome/mantenimiento}">
+                        <span class="nav-icon">&#128295;</span> Registro de Mantenimiento
+                    </a>
+                </li>
+
+            </ul>
+
+            <div class="sidebar-upgrade">
+                <button type="button" class="btn-upgrade" th:data-url="@{/welcome/pagos}"
+        onclick="window.location.href=this.dataset.url">&#9889; Upgrade to Pro</button>
+                    
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="nav-item">&#9881; Configuración</button>
+                <form th:action="@{/logout}" method="post" style="display:inline">
+                    <button type="submit" id="logoutBtn" class="nav-item nav-item--danger">
+                        &#8618; Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <div>
+            <!-- ================================================================
+                 TOPBAR: saludo con el nombre real del usuario logueado.
+                 - Cada controlador que devuelve "welcome" publica antes:
+                    model.addAttribute("usuario", usuarioDeSesion)
+                    donde usuarioDeSesion sale de session.getAttribute("usuarioLogueado")
+                    (se guarda en AuthController.procesarLogin tras validar correo/clave).
+                 - ${usuario.nombre} es la columna usuario.nombre de la BD.
+                 - El avatar usa la primera letra del nombre en mayúscula.
+                 - Si por algún motivo no hay usuario, se muestra "Hola" / "U".
+                 ================================================================ -->
+            <header class="topbar">
+                <div class="user">
+                    <span class="user-name"
+                          th:text="${usuario != null and usuario.nombre != null ? 'Hola, ' + usuario.nombre : 'Hola'}">Hola, User</span>
+                    <div class="user-avatar"
+                         th:text="${usuario != null and usuario.nombre != null ? #strings.substring(usuario.nombre, 0, 1).toUpperCase() : 'U'}">U</div>
+                </div>
+            </header>
+
+            <main class="contenido-principal" id="contenedor-modulo">
+                <div th:if="${moduloActivo == null}">
+                    <h2 class="subtitle-main">Bienvenido a BikeCare</h2>
+                    <p class="words-main">Selecciona una opción del menú lateral</p>
+                </div>
+
+                <th:block th:if="${moduloActivo == 'panelControl'}">
+                    <div th:replace="~{modulo-panelControl :: panelContet}"></div>
+                </th:block>
+
+                <th:block th:if="${moduloActivo == 'garaje'}">
+                    <div th:replace="~{modulo-garaje :: moduloGaraje}"></div>
+                </th:block>
+                
+                <th:block th:if="${moduloActivo == 'registrarBici'}">
+                    <div th:replace="~{modulo-garaAddBici :: moduloNuevaBici}"></div>
+                </th:block>
+
+                <th:block th:if="${moduloActivo == 'addComponentes'}">
+                    <div th:replace="~{modulo-addBici-Componentes :: addComponentes}"></div>
+                </th:block>
+
+                <th:block th:if="${moduloActivo == 'registroRuta'}">
+                    <div th:replace="~{modulo-registroRuta :: moduloRuta}"></div>
+                </th:block>
+
+                <th:block th:if="${moduloActivo == 'diagnosticoIA'}">
+                    <div th:replace="~{modulo-diagnosticoIA :: moduloDiagnosticoIA}"></div>
+                </th:block>
+
+                <th:block th:if="${moduloActivo == 'pagos'}">
+                    <div th:replace="~{modulo-pagos :: moduloPagos}"></div>
+                </th:block>
+
+                <th:block th:if="${moduloActivo == 'historial'}">
+                    <div th:replace="~{modulo-historial :: moduloHistorial}"></div>
+                </th:block>
+
+                <th:block th:if="${moduloActivo == 'mantenimiento'}">
+                    <div th:replace="~{modulo-registroMantenimiento :: moduloMantenimiento}"></div>
+                </th:block>
+            </main>
+        </div>
+
+
+    </div>
+</body>
+
+</html>

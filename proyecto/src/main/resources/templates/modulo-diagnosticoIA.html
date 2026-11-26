@@ -1,0 +1,169 @@
+<!-- ============================================================================
+     DIAGNÓSTICO IA — fragmento Thymeleaf "moduloDiagnosticoIA".
+     Lo inserta welcome.html cuando moduloActivo == 'diagnosticoIA'.
+     Datos que envía DiagnosticoIAController:
+       bicicletas (List<Bicicleta>), biciSeleccionada, descripcion,
+       componentesSel (List<String>), resultado (DiagnosticoResultado),
+       mostrarResultado (boolean).
+     ========================================================================== -->
+<div th:fragment="moduloDiagnosticoIA" class="contenedor-modulo dia">
+  <link rel="stylesheet" th:href="@{/css/styleDiagnosticoIA.css}">
+
+  <!-- Encabezado del módulo -->
+  <div class="dia-module-head">
+    <h1>Diagnóstico IA</h1>
+    <p>Analiza los síntomas de tu bicicleta y recibe una orientación preliminar generada por IA.</p>
+  </div>
+
+  <!-- PARTE SUPERIOR: ingreso de datos -->
+  <section class="dia-card">
+    <h2>Describe el problema</h2>
+    <p class="sub">Detalla qué le ocurre a tu bicicleta para obtener un diagnóstico más preciso.</p>
+
+    <form th:action="@{/welcome/diagnosticoIA/analizar}" method="post" enctype="multipart/form-data">
+      <!-- Bicicleta -->
+      <div class="dia-field">
+        <label for="dia-bici">Bicicleta a evaluar *</label>
+        <select id="dia-bici" name="idBicicleta" required
+                onchange="if(this.value) window.location.href='/welcome/diagnosticoIA?biciId='+this.value">
+          <option value="" disabled th:selected="${biciSeleccionada == null}">Selecciona una de tus bicicletas...</option>
+          <option th:each="b : ${bicicletas}"
+                  th:value="${b.idBicicleta}"
+                  th:selected="${biciSeleccionada != null and b.idBicicleta == biciSeleccionada.idBicicleta}"
+                  th:text="${b.marca + ' ' + b.modelo + (b.anio != null ? ' · ' + b.anio : '')}">
+            Trek Marlin 8 · 2021
+          </option>
+        </select>
+      </div>
+
+      <!-- Componentes -->
+      <div class="dia-field">
+        <label>Componentes <span>— marca los que tiene la bicicleta seleccionada</span></label>
+        <div class="dia-checks">
+          <label class="dia-check"><input type="checkbox" name="componentes" value="Cadena"
+            th:checked="${componentesSel != null and #lists.contains(componentesSel, 'Cadena')}"> ⛓️ Cadena</label>
+          <label class="dia-check"><input type="checkbox" name="componentes" value="Frenos"
+            th:checked="${componentesSel != null and #lists.contains(componentesSel, 'Frenos')}"> 🛞 Frenos</label>
+          <label class="dia-check"><input type="checkbox" name="componentes" value="Cambios"
+            th:checked="${componentesSel != null and #lists.contains(componentesSel, 'Cambios')}"> ⚙️ Cambios</label>
+          <label class="dia-check"><input type="checkbox" name="componentes" value="Llantas"
+            th:checked="${componentesSel != null and #lists.contains(componentesSel, 'Llantas')}"> 🛞 Llantas</label>
+          <label class="dia-check"><input type="checkbox" name="componentes" value="Rodamientos"
+            th:checked="${componentesSel != null and #lists.contains(componentesSel, 'Rodamientos')}"> 🔩 Rodamientos</label>
+          <label class="dia-check"><input type="checkbox" name="componentes" value="Suspensión"
+            th:checked="${componentesSel != null and #lists.contains(componentesSel, 'Suspensión')}"> 🔧 Suspensión</label>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="dia-field">
+        <label for="dia-desc">Síntomas y comportamiento <span>— o adjunta foto/audio</span></label>
+        <textarea id="dia-desc" name="descripcion" class="dia-textarea" maxlength="2000"
+                  placeholder="Ej. Escucho un crujido metálico al pedalear fuerte en subidas, la cadena salta en el piñón 3..."
+                  th:text="${descripcion}"></textarea>
+        <small style="font-size:12px;color:var(--slate-500);">Mínimo una evidencia: texto, foto o audio. Los componentes solos no bastan.</small>
+      </div>
+
+      <!-- Multimedia: foto y audio opcionales (se envían a Gemini si hay key) -->
+      <div class="dia-media">
+        <input type="file" id="dia-foto" name="foto" accept="image/jpeg,image/png" class="dia-file-hidden">
+        <input type="file" id="dia-audio" name="audio" accept="audio/*" class="dia-file-hidden">
+        <label for="dia-foto" class="dia-media-btn">
+          <span class="ico">📷</span>
+          <strong>Añadir Foto</strong>
+          <small>1 sola · JPG / PNG · máx 5MB</small>
+        </label>
+        <label for="dia-audio" class="dia-media-btn">
+          <span class="ico">🎙️</span>
+          <strong>Grabar Sonido</strong>
+          <small>1 solo · máx 5MB · ej. crujido</small>
+        </label>
+      </div>
+
+      <!-- Archivos subidos: nombres de los adjuntos elegidos -->
+      <div class="dia-adjuntos-titulo">Archivos subidos</div>
+      <div id="dia-adjuntos" class="dia-adjuntos">
+        <p id="dia-adjuntos-vacio" class="dia-adjuntos-vacio">Ninguno</p>
+        <div id="dia-foto-prev" class="dia-adjunto-nombre" hidden>
+          <span><span class="dia-adjunto-ico">📷</span><span id="dia-foto-nombre"></span></span>
+          <button type="button" id="dia-foto-quitar" class="dia-adjunto-quitar">Quitar</button>
+        </div>
+        <div id="dia-audio-prev" class="dia-adjunto-nombre" hidden>
+          <span><span class="dia-adjunto-ico">🎙️</span><span id="dia-audio-nombre"></span></span>
+          <button type="button" id="dia-audio-quitar" class="dia-adjunto-quitar">Quitar</button>
+        </div>
+      </div>
+      <script th:src="@{/js/diagnosticoIA.js}"></script>
+
+      <button type="submit" class="dia-btn-ia">✨ Analizar con IA</button>
+      <p class="dia-hint">Análisis demo por reglas · no reemplaza la revisión de un taller</p>
+    </form>
+  </section>
+
+  <!-- PARTE INFERIOR: resultados -->
+  <section class="dia-card">
+    <div class="dia-result-head">
+      <div class="dia-result-icon">🤖</div>
+      <div>
+        <h2>Resultados del Análisis</h2>
+        <p class="sub">Diagnóstico preliminar generado
+          <span th:if="${fuenteDiagnostico == 'gemini'}">· por Gemini</span>
+          <span th:if="${fuenteDiagnostico == 'local'}">· modo local</span>
+          <span th:if="${fotoNombre != null}" th:text="${' · 📷 ' + fotoNombre}"></span>
+          <span th:if="${audioNombre != null}" th:text="${' · 🎙️ ' + audioNombre}"></span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Estado vacío: aún no se analiza -->
+    <div class="dia-empty" th:if="${mostrarResultado == null or !mostrarResultado}">
+      <span class="big">🔍</span>
+      Aún no hay diagnóstico. Completa la bicicleta y los síntomas arriba y pulsa
+      <strong>Analizar con IA</strong> para ver aquí la severidad, la posible causa y las soluciones.
+    </div>
+
+    <!-- Resultado real del POST -->
+    <th:block th:if="${mostrarResultado and resultado != null}">
+      <!-- Severidad -->
+      <div class="dia-severity">
+        <div class="dia-severity-top">
+          <strong>Nivel de severidad</strong>
+          <span class="dia-pill" th:classappend="${' dia-pill--' + resultado.severidad}"
+                th:text="${'● ' + resultado.etiqueta}">● Bajo</span>
+        </div>
+        <div class="dia-sev-bar" aria-hidden="true">
+          <i th:classappend="${resultado.severidad == 'BAJO' or resultado.severidad == 'MEDIO' or resultado.severidad == 'ALTO' ? (resultado.severidad == 'BAJO' ? ' on-bajo' : (resultado.severidad == 'MEDIO' ? ' on-medio' : ' on-alto')) : ''}"></i>
+          <i th:classappend="${resultado.severidad == 'MEDIO' or resultado.severidad == 'ALTO' ? (resultado.severidad == 'MEDIO' ? ' on-medio' : ' on-alto') : ''}"></i>
+          <i th:classappend="${resultado.severidad == 'ALTO' ? ' on-alto' : ''}"></i>
+        </div>
+        <p th:text="${resultado.mensajeUso}">Puedes seguir usando tu bicicleta...</p>
+      </div>
+
+      <!-- Diagnóstico -->
+      <div class="dia-block">
+        <h3>Posible causa</h3>
+        <div class="dia-cause">
+          <strong th:text="${resultado.causaTitulo}">Falta de lubricación o suciedad en rodamientos</strong>
+          <p th:text="${resultado.causaDetalle}">Explicación basada en los síntomas...</p>
+        </div>
+      </div>
+
+      <!-- Plan de acción -->
+      <div class="dia-block">
+        <h3>Soluciones propuestas</h3>
+        <ol class="dia-solutions">
+          <li th:each="paso, iter : ${resultado.soluciones}">
+            <div class="dia-sol-num" th:text="${iter.count}">1</div>
+            <div>
+              <strong th:text="${paso.titulo}">Limpieza básica</strong>
+              <span th:text="${paso.detalle}">Descripción del paso...</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <p class="dia-disclaimer">Diagnóstico orientativo generado por IA. Valídalo con un mecánico antes de comprar repuestos.</p>
+    </th:block>
+  </section>
+
+</div>

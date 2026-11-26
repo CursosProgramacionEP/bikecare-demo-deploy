@@ -1,0 +1,195 @@
+<div th:fragment="addComponentes" class="contenedor">
+    <link rel="stylesheet" th:href="@{/css/styleAddComponentes.css}">
+
+    <!-- ENCABEZADO -->
+    <div class="encabezado">
+        <a th:href="@{/welcome/garaje}" class="volver">← Volver al garaje</a>
+
+        <h1>Componentes de tu bicicleta</h1>
+
+        <p>
+            Selecciona los componentes que deseas monitorear.
+            Su mantenimiento se controla según los kilómetros recorridos por tu bicicleta.
+        </p>
+    </div>
+
+
+    <!-- INFORMACIÓN DE LA BICICLETA -->
+    <section class="bicicleta-info">
+
+        <div class="bicicleta-icono">
+            🚲
+        </div>
+
+        <div>
+            <span>Bicicleta</span>
+            <h2 th:text="${bicicleta.marca + ' ' + bicicleta.modelo}">Trek Marlin 8</h2>
+            <p th:text="${#numbers.formatDecimal(bicicleta.kilometrajeTotal, 1, 'COMMA', 1, 'POINT') + ' km recorridos'}">
+                1,250.0 km recorridos</p>
+        </div>
+
+    </section>
+
+
+    <!-- FORMULARIO -->
+    <form th:action="@{/welcome/garaje/{id}/componentes(id=${bicicleta.idBicicleta})}" method="post" id="formComponentes">
+
+        <section class="componentes-card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>Selecciona tus componentes</h2>
+
+                    <p>
+                        Marca los componentes instalados actualmente
+                        en tu bicicleta.
+                    </p>
+                </div>
+
+                <span class="contador" id="contadorSeleccion">
+                    0 seleccionados
+                </span>
+
+            </div>
+
+
+            <!-- COMPONENTES (vienen del catálogo de la base de datos) -->
+            <div class="componentes-grid">
+
+                <label class="componente" th:each="c : ${catalogo}">
+
+                    <input type="checkbox" name="componentes" th:value="${c.idComponente}"
+                        th:disabled="${instalados.contains(c.idComponente)}">
+
+                    <div class="componente-contenido">
+
+                        <div class="componente-icono" th:text="${c.icono ?: '🔧'}">
+                            ⚙️
+                        </div>
+
+                        <div>
+                            <h3 th:text="${c.nombre}">Cadena</h3>
+                            <p th:text="${c.categoria}">Transmisión</p>
+                        </div>
+
+                        <span class="etiqueta-instalado" th:if="${instalados.contains(c.idComponente)}">
+                            Ya instalado
+                        </span>
+
+                    </div>
+
+                </label>
+
+            </div>
+
+        </section>
+
+
+        <!-- DATOS DE CADA COMPONENTE SELECCIONADO (el JS muestra solo los marcados) -->
+        <section class="datos-card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>Información de instalación</h2>
+
+                    <p>
+                        Puedes registrar los datos de los componentes
+                        seleccionados.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="aviso">
+                💡
+                <span>
+                    Si no conoces algún dato, puedes dejarlo vacío. Sin fecha ni kilometraje,
+                    se asume que el componente se instaló hoy, con el kilometraje actual de la bicicleta.
+                </span>
+            </div>
+
+            <p class="sin-seleccion" id="sinSeleccion">
+                Marca al menos un componente para completar sus datos.
+            </p>
+
+
+            <div class="componente-form" th:each="c : ${catalogo}" th:unless="${instalados.contains(c.idComponente)}"
+                th:id="${'detalle-' + c.idComponente}">
+
+                <div class="componente-form-header">
+
+                    <div>
+                        <h3 th:text="${(c.icono ?: '🔧') + ' ' + c.nombre}">⛓️ Cadena</h3>
+                        <span th:text="${c.categoria}">Transmisión</span>
+                        <span class="vida-util" th:if="${c.vidaUtilReferencial != null}"
+                            th:text="${' · Vida útil de referencia: ' + #numbers.formatInteger(c.vidaUtilReferencial, 1, 'COMMA') + ' km'}">
+                            · Vida útil de referencia: 3,000 km</span>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="campo">
+                        <label th:for="${'marca_' + c.idComponente}">
+                            Marca
+                        </label>
+                        <input type="text" th:id="${'marca_' + c.idComponente}" th:name="${'marca_' + c.idComponente}"
+                            maxlength="80" placeholder="Ej. Shimano">
+                    </div>
+
+                    <div class="campo">
+                        <label th:for="${'modelo_' + c.idComponente}">
+                            Modelo
+                        </label>
+                        <input type="text" th:id="${'modelo_' + c.idComponente}" th:name="${'modelo_' + c.idComponente}"
+                            maxlength="80" placeholder="Ej. HG601">
+                    </div>
+
+                    <div class="campo">
+                        <label th:for="${'fecha_' + c.idComponente}">
+                            Fecha de instalación
+                        </label>
+                        <input type="date" th:id="${'fecha_' + c.idComponente}" th:name="${'fecha_' + c.idComponente}"
+                            th:max="${hoy}">
+                    </div>
+
+                    <div class="campo">
+                        <label th:for="${'km_' + c.idComponente}">
+                            Kilometraje al instalar
+                        </label>
+                        <input type="number" th:id="${'km_' + c.idComponente}" th:name="${'km_' + c.idComponente}"
+                            placeholder="Ej. 1250" min="0" step="0.01" th:max="${bicicleta.kilometrajeTotal}">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- BOTONES -->
+        <div class="acciones">
+
+            <a th:href="@{/welcome/garaje}" class="btn-cancelar">
+                Cancelar
+            </a>
+
+            <button type="submit" class="btn-guardar" id="btnGuardarComponentes" disabled>
+
+                Guardar componentes
+
+            </button>
+
+        </div>
+
+    </form>
+
+    <script th:src="@{/js/addComponentes.js}"></script>
+
+</div>

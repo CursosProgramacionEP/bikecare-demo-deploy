@@ -1,0 +1,264 @@
+/* ============================================================
+   Variables de diseño (BikeCare Dashboard)
+   ============================================================ */
+:root {
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-900: #0f172a;
+  --emerald-100: #d1fae5;
+  --emerald-700: #047857;
+  --red-50: #fef2f2;
+  --red-500: #ef4444;
+}
+
+/* ============================================================
+   Reset básico
+   ============================================================ */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--slate-50);
+  color: var(--slate-900);
+}
+
+/* ============================================================
+   Layout Principal
+   ============================================================ */
+.container-app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* El contenedor derecho (todo lo que no es el sidebar) */
+.container-app > div:not(.sidebar) {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ============================================================
+   Barra Lateral (Sidebar)
+   ============================================================ */
+.sidebar {
+  width: 256px;
+  flex-shrink: 0;
+  background: #fff;
+  border-right: 1px solid var(--slate-200);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.sidebar-header {
+  padding: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand img {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.brand-text {
+  line-height: 1.2;
+}
+
+.brand-name {
+  margin: 0;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--slate-900);
+}
+
+.brand-sub {
+  margin: 2px 0 0;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--slate-400);
+}
+
+/* ============================================================
+   Navegación del Sidebar (Tus <ul> y <li>)
+   ============================================================ */
+.sidebar ul {
+  list-style: none;
+  padding: 8px 12px;
+  margin: 0;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar ul li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-decoration: none;
+  color: var(--slate-600);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sidebar ul li a:hover {
+  background: var(--slate-50);
+}
+
+.nav-icon {
+  color: var(--slate-400);
+  width: 18px;
+  text-align: center;
+}
+
+/* ============================================================
+   Sección Upgrade a Pro
+   ============================================================ */
+.sidebar-upgrade {
+  padding: 0 12px 12px;
+}
+
+.btn-upgrade {
+  width: 100%;
+  box-sizing: border-box; /* evita que se desborde del sidebar igual que .nav-item */
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--emerald-100);
+  color: var(--emerald-700);
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.btn-upgrade:hover {
+  background: #a7f3d0;
+}
+
+/* ============================================================
+   Footer del Sidebar (Configuración y Cerrar Sesión)
+   ============================================================ */
+.sidebar-footer {
+  border-top: 1px solid var(--slate-200);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  width: 100%;
+  box-sizing: border-box; /* el padding entra dentro del 100%: evita que el botón se salga del sidebar */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: left;
+  color: var(--slate-600);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.nav-item:hover {
+  background: var(--slate-50);
+}
+
+.nav-item--danger {
+  color: var(--red-500);
+}
+
+.nav-item--danger:hover {
+  background: var(--red-50);
+}
+
+/* ============================================================
+   Barra Superior (Topbar)
+   ============================================================ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Alinea el usuario a la derecha */
+  padding: 16px 32px;
+  background: #fff;
+  border-bottom: 1px solid var(--slate-200);
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--slate-700);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--slate-200);
+  color: var(--slate-500);
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================
+   Contenido Principal
+   ============================================================ */
+.contenido-principal {
+  padding: 40px;
+  flex: 1;
+}
+
+.subtitle-main {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--slate-900);
+}
+
+.words-main {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--slate-500);
+}

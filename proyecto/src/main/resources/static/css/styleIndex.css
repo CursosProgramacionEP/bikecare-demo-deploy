@@ -1,0 +1,197 @@
+/* ============================================================
+   Variables extraídas del diseño base
+   ============================================================ */
+:root {
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-500: #64748b;
+  --slate-700: #334155;
+  --slate-900: #0f172a;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+
+/* ============================================================
+   Reset básico para la tipografía global
+   ============================================================ */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   Contenedor principal y fondo
+   ============================================================ */
+.login-conteiner {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  /* Degradado sutil para el fondo */
+  background: linear-gradient(180deg, var(--slate-50) 0%, var(--slate-100) 100%);
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   Tarjeta del Login
+   ============================================================ */
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-xl);
+  padding: 40px 32px;
+  box-sizing: border-box;
+  /* Sombra suave para darle profundidad */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); 
+}
+
+/* ============================================================
+   Cabecera (Logo y Títulos)
+   ============================================================ */
+.login-header {
+  text-align: center;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-header img {
+  height: 45px;
+  width: auto;
+  margin-bottom: 16px;
+  border-radius: 8px; /* Le da un toque suave al logo si es cuadrado */
+}
+
+.login-header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--slate-900);
+}
+
+.login-subtitulos {
+  margin: 6px 0 0 0;
+  font-size: 14px;
+  color: var(--slate-500);
+}
+
+/* ============================================================
+   Formulario e Inputs
+   ============================================================ */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.grupo-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.grupo-formulario label {
+  font-size: 14px;
+  color: var(--slate-700);
+  font-weight: 500;
+}
+
+.grupo-formulario input {
+  width: 100%;
+  border: 1px solid var(--slate-200);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--slate-700);
+  background: #fff;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.grupo-formulario input::placeholder {
+  color: var(--slate-300);
+}
+
+/* Efecto focus brillante azul igual al de tu diseño base */
+.grupo-formulario input:focus {
+  outline: none;
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* ============================================================
+   Botón Principal
+   ============================================================ */
+.btn-submit {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--blue-600);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: 8px;
+  font-family: inherit;
+}
+
+.btn-submit:hover {
+  background: var(--blue-700);
+}
+
+/* ============================================================
+   Pie de página (Link de registro)
+   ============================================================ */
+.login-footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--slate-100);
+  text-align: center;
+}
+
+.login-footer p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--slate-500);
+}
+
+.login-footer a {
+  color: var(--blue-600);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.login-footer a:hover {
+  color: var(--blue-700);
+  text-decoration: underline;
+}
+
+
+
+/*parte del error*/
+
+.alerta-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}

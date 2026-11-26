@@ -1,0 +1,238 @@
+.mant-module {
+    font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.mant-head h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #0f172a;
+}
+
+.mant-head p {
+    margin: 6px 0 24px;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.mant-aviso {
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #92400e;
+    margin-bottom: 20px;
+}
+
+.mant-aviso a {
+    color: #92400e;
+    font-weight: 600;
+}
+
+.mant-form {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.mant-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.mant-field--full {
+    grid-column: 1 / -1;
+}
+
+/* Sin esto, el display:flex del campo anula el atributo hidden. */
+.mant-field[hidden],
+.mant-componentes-grupo[hidden] {
+    display: none;
+}
+
+.mant-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.mant-field input,
+.mant-field select,
+.mant-field textarea {
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #0f172a;
+    background: #fff;
+}
+
+.mant-field input:focus,
+.mant-field select:focus,
+.mant-field textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px #dbeafe;
+}
+
+.mant-hint {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.mant-hint--alerta {
+    color: #b45309;
+}
+
+.mant-componentes-grupo {
+    margin-top: 10px;
+}
+
+.mant-componentes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.mant-componente {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.mant-componente:hover {
+    border-color: #93c5fd;
+    background: #f8fafc;
+}
+
+.mant-componente input {
+    margin-top: 2px;
+    accent-color: #2563eb;
+    flex: 0 0 auto;
+}
+
+.mant-componente-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.mant-componente-nombre {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.mant-componente-meta {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.mant-componentes-vacio {
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: #b45309;
+}
+
+.mant-btn {
+    grid-column: 1 / -1;
+    padding: 11px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mant-btn:hover {
+    background: #1d4ed8;
+}
+
+.mant-lista {
+    margin-top: 28px;
+}
+
+.mant-lista h2 {
+    font-size: 18px;
+    color: #0f172a;
+    margin: 0 0 12px;
+}
+
+.mant-vacio {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.mant-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mant-item {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+.mant-item-main {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.mant-item-main b {
+    color: #0f172a;
+}
+
+.mant-item-main span {
+    color: #475569;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.mant-item-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.mant-item-notas {
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: #334155;
+}
+
+@media (max-width: 640px) {
+    .mant-form {
+        grid-template-columns: 1fr;
+    }
+
+    .mant-componentes-grid {
+        grid-template-columns: 1fr;
+    }
+}

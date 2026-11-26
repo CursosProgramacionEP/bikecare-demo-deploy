@@ -1,0 +1,296 @@
+/* ============================================================
+   Variables del Sistema BikeCare
+   ============================================================ */
+:root {
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --blue-50: #eff6ff;
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-900: #0f172a;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --font-main:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--slate-50);
+  color: var(--slate-900);
+}
+
+/* ============================================================
+   Navegación de Retorno
+   ============================================================ */
+
+.contenedor-modulo {
+  justify-self: center;
+}
+
+.contenedor-modulo a[onclick] {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--slate-500);
+  text-decoration: none;
+  margin-bottom: 20px;
+  cursor: pointer; /* Puntero de manito */
+  transition: color 0.15s ease;
+}
+
+.contenedor-modulo a[onclick]:hover {
+  color: var(--blue-600);
+}
+
+/* ============================================================
+   Encabezado Principal
+   ============================================================ */
+.contenedor-modulo header {
+  margin-bottom: 28px;
+}
+
+.contenedor-modulo header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--slate-900);
+  letter-spacing: -0.02em;
+}
+
+.contenedor-modulo header p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--slate-500);
+}
+
+/* ============================================================
+   Formulario Principal (Layout 2 Columnas)
+   ============================================================ */
+form {
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.columna-izquierda,
+.columna-derecha {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Secciones (Fieldsets) */
+fieldset {
+  border: 1px solid var(--slate-200);
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+legend {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--slate-900);
+  padding: 0 8px;
+  margin-left: -8px;
+}
+
+fieldset > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--slate-700);
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--slate-900);
+  background-color: #ffffff;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder,
+textarea::placeholder {
+  color: var(--slate-400);
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 36px;
+}
+
+/* Ajustes específicos de campos */
+.columna-izquierda fieldset:nth-of-type(3) {
+  grid-template-columns: 1fr;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Sección Foto de la Bicicleta */
+.columna-derecha fieldset {
+  grid-template-columns: 1fr;
+}
+
+.columna-derecha fieldset > div:first-of-type {
+  border: 2px dashed var(--slate-300);
+  background: var(--slate-50);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease;
+}
+
+.columna-derecha fieldset > div:first-of-type:hover {
+  border-color: var(--blue-600);
+}
+
+.columna-derecha fieldset p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--slate-600);
+}
+
+input[type="file"] {
+  display: none;
+}
+
+label[for="foto"] {
+  display: inline-block;
+  background: #ffffff;
+  border: 1px solid var(--slate-300);
+  color: var(--slate-700);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+label[for="foto"]:hover {
+  background: var(--slate-100);
+  border-color: var(--slate-400);
+}
+
+small {
+  color: var(--slate-500);
+  font-size: 12px;
+}
+
+/* ============================================================
+   Botones de Acción (Guardar / Cancelar)
+   ============================================================ */
+.contenedor-botones {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+button[type="submit"] {
+  width: 100%;
+  background: var(--blue-600);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 20px;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+button[type="submit"]:hover {
+  background: var(--blue-700);
+}
+
+.btn-cancelar {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  color: var(--slate-500);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  cursor: pointer; /* Puntero de manito */
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.btn-cancelar:hover {
+  background: var(--slate-200);
+  color: var(--slate-800);
+}
+
+/* ============================================================
+   Adaptabilidad Móvil
+   ============================================================ */
+@media (max-width: 768px) {
+  form {
+    grid-template-columns: 1fr;
+  }
+
+  fieldset {
+    grid-template-columns: 1fr;
+  }
+}

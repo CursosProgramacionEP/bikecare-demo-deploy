@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprobante de pago - BikeCare</title>
+    <link rel="stylesheet" th:href="@{/css/styleComprobante.css}">
+</head>
+<body>
+    <main class="comprobante">
+        <header class="comprobante__head">
+            <div class="comprobante__marca">
+                <span class="comprobante__logo">BikeCare</span>
+                <small>Cycling Care Platform</small>
+            </div>
+            <div class="comprobante__titulo">
+                <h1>Comprobante de pago</h1>
+                <p class="comprobante__sub">Documento generado automáticamente</p>
+            </div>
+        </header>
+
+        <section class="comprobante__datos">
+            <div class="comprobante__fila">
+                <span class="comprobante__label">Número de comprobante</span>
+                <span class="comprobante__valor" th:text="${comprobante.numeroComprobante}">CP-000001</span>
+            </div>
+            <div class="comprobante__fila">
+                <span class="comprobante__label">Fecha de emisión</span>
+                <span class="comprobante__valor"
+                      th:text="${#temporals.format(comprobante.fechaEmision, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</span>
+            </div>
+            <div class="comprobante__fila">
+                <span class="comprobante__label">Cliente</span>
+                <span class="comprobante__valor" th:text="${comprobante.nombreUsuario}">Juan Pérez</span>
+            </div>
+            <div class="comprobante__fila">
+                <span class="comprobante__label">Correo</span>
+                <span class="comprobante__valor" th:text="${comprobante.correoUsuario}">correo@ejemplo.com</span>
+            </div>
+        </section>
+
+        <section class="comprobante__detalle">
+            <h2>Detalle</h2>
+            <table class="comprobante__tabla">
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Método</th>
+                        <th>Detalle</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td th:text="${comprobante.concepto}">Registro de método de pago</td>
+                        <td th:text="${comprobante.tipoMetodo}">Tarjeta</td>
+                        <td th:text="${comprobante.detalle}">VISA **** 4242</td>
+                        <td th:text="${comprobante.estado}">Activo</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <footer class="comprobante__pie">
+            <p>Este comprobante es un documento informativo generado por BikeCare.</p>
+            <p>Consérvalo para tus registros.</p>
+        </footer>
+
+        <div class="comprobante__acciones no-print">
+            <button type="button" onclick="window.print()">Imprimir / Guardar PDF</button>
+            <a th:href="@{/welcome/pagos}">Volver a métodos de pago</a>
+        </div>
+    </main>
+</body>
+</html>

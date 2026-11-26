@@ -1,0 +1,95 @@
+<div th:fragment="moduloRuta" class="contenedor-modulo">
+    <link rel="stylesheet" th:href="@{/css/styleRegistroRuta.css}">
+
+    <!-- Encabezado principal -->
+    <header>
+        <h1>Registrar Nueva Ruta</h1>
+        <p>Añade los kilómetros recorridos para calcular automáticamente el desgaste de tus componentes.</p>
+    </header>
+
+    <!-- Formulario principal hacia el backend -->
+    <form th:action="@{/welcome/registroRuta}" method="POST" enctype="multipart/form-data" class="form-ruta">
+        <!-- Tarjeta de datos de la ruta -->
+        <fieldset class="ruta-fieldset">
+            <legend>Información del Recorrido</legend>
+
+            <!-- Selección de Bicicleta -->
+            <div class="campo campo-full">
+                <label for="idBicicleta">Bicicleta utilizada *</label>
+                <select id="idBicicleta" name="idBicicleta" required>
+                    <option value="" disabled selected>Selecciona una de tus bicicletas...</option>
+                    <option th:each="b : ${bicicletas}" 
+                            th:value="${b.idBicicleta}" 
+                            th:text="${b.marca + ' ' + b.modelo + ' (' + b.kilometrajeTotal + ' km)'}">
+                        Trek Marlin 8 (1,250 km)
+                    </option>
+                </select>
+            </div>
+
+            <!-- Distancia en Km -->
+            <div class="campo">
+                <label for="distanciaKm">Distancia recorrida (km) *</label>
+                <div class="input-km-wrapper">
+                    <input type="number" id="distanciaKm" name="distanciaKm" 
+                           placeholder="Ej. 25.50" min="0.10" max="1000.00" step="0.01" required>
+                    <span class="km-badge">km</span>
+                </div>
+                <small id="hintDistancia" class="campo-hint" hidden>Se calcula automáticamente desde el archivo GPX.</small>
+            </div>
+
+            <!-- Fecha y Hora del recorrido -->
+            <div class="campo">
+                <label for="fechaRecorrido">Fecha del trayecto</label>
+                <input type="date" id="fechaRecorrido" name="fechaRecorrido" th:value="${hoy}"
+                       th:max="${hoy}">
+            </div>
+
+            <!-- Origen del registro -->
+            <div class="campo campo-full">
+                <label for="origenRegistro">Origen del registro</label>
+                <select id="origenRegistro" name="origenRegistro">
+                    <option value="Manual" selected>Manual (Cargar datos directamente)</option>
+                    <option value="GPX">Importación de archivo GPX</option>
+                </select>
+            </div>
+
+            <!-- Archivo GPX (solo visible cuando el origen es GPX) -->
+            <div class="campo campo-full" id="campoGpx" hidden>
+                <label for="archivoGpx">Archivo GPX *</label>
+                <div class="gpx-selector">
+                    <input type="file" id="archivoGpx" name="archivoGpx" class="gpx-input-oculto"
+                           accept=".gpx,application/gpx+xml">
+                    <label for="archivoGpx" class="btn-archivo">📂 Seleccionar archivo</label>
+                    <span id="gpxNombre" class="gpx-nombre">Ningún archivo seleccionado</span>
+                    <button type="button" id="btnQuitarGpx" class="btn-quitar-gpx" hidden
+                            aria-label="Quitar archivo seleccionado">✕ Quitar</button>
+                </div>
+                <small id="gpxEstado" class="campo-hint">Sube el archivo .gpx de tu recorrido (máx. 5 MB).</small>
+            </div>
+        </fieldset>
+
+        <!-- Tarjeta lateral informativa sobre el impacto en componentes -->
+        <div class="ruta-sidebar">
+            <div class="info-card">
+                <div class="info-header">
+                    <div class="info-icon">⚡</div>
+                    <h3>Cálculo de Desgaste</h3>
+                </div>
+                <p>Al guardar esta ruta, el sistema:</p>
+                <ul>
+                    <li>Sumará la distancia al <strong>odómetro general</strong> de la bicicleta.</li>
+                    <li>Incrementará el <strong>kilometraje actual</strong> de las piezas activas (cadena, pastillas, transmisión).</li>
+                    <li>Evaluará los <strong>umbrales</strong> configurados para emitir alertas si requieren servicio.</li>
+                </ul>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="contenedor-botones">
+                <button type="submit" class="btn-guardar">Guardar Ruta</button>
+                <a class="btn-cancelar" th:href="@{/welcome/panelControl}">Cancelar</a>
+            </div>
+        </div>
+    </form>
+
+    <script th:src="@{/js/registroRuta.js}"></script>
+</div>

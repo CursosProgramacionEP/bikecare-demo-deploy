@@ -1,0 +1,166 @@
+<div th:fragment="moduloPagos" class="contenedor-modulo modulo-pagos">
+    <link rel="stylesheet" th:href="@{/css/stylePagos.css}">
+
+    <!-- Encabezado principal -->
+    <header class="pago-header">
+        <h1>Métodos de pago</h1>
+        <p>Registra una tarjeta o paga con Plin o Yape escaneando el código QR.</p>
+    </header>
+
+    <div class="pago-layout">
+
+        <!-- ============ COLUMNA IZQUIERDA: formulario ============ -->
+        <div class="pago-col"
+             th:with="esTarjeta=${pagoForm.tipo != null and pagoForm.tipo.name() == 'TARJETA'},
+                      esBilletera=${pagoForm.tipo != null and pagoForm.tipo.name() != 'TARJETA'}">
+
+            <form id="formPago" class="pago-form" th:action="@{/welcome/pagos}" th:object="${pagoForm}"
+                  method="post" novalidate autocomplete="off">
+
+                <!-- Selector de método -->
+                <fieldset class="pago-card">
+                    <legend>Elige cómo quieres pagar</legend>
+                    <div class="pago-opciones" role="radiogroup" aria-label="Método de pago">
+
+                        <label class="pago-opcion">
+                            <input type="radio" name="tipo" value="TARJETA" th:checked="*{tipo?.name() == 'TARJETA'}">
+                            <span class="pago-opcion__box">
+                                <span class="pago-opcion__icono">&#128179;</span>
+                                <span class="pago-opcion__texto">Tarjeta</span>
+                                <small>Crédito / débito</small>
+                            </span>
+                        </label>
+
+                        <label class="pago-opcion">
+                            <input type="radio" name="tipo" value="PLIN" th:checked="*{tipo?.name() == 'PLIN'}">
+                            <span class="pago-opcion__box pago-opcion__box--plin">
+                                <span class="pago-opcion__icono">&#128241;</span>
+                                <span class="pago-opcion__texto">Plin</span>
+                                <small>Paga con QR</small>
+                            </span>
+                        </label>
+
+                        <label class="pago-opcion">
+                            <input type="radio" name="tipo" value="YAPE" th:checked="*{tipo?.name() == 'YAPE'}">
+                            <span class="pago-opcion__box pago-opcion__box--yape">
+                                <span class="pago-opcion__icono">&#128241;</span>
+                                <span class="pago-opcion__texto">Yape</span>
+                                <small>Paga con QR</small>
+                            </span>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <!-- Campos de TARJETA (se ocultan y deshabilitan si se elige Plin/Yape) -->
+                <fieldset id="seccionTarjeta" class="pago-card pago-seccion"
+                          th:classappend="${!esTarjeta} ? 'pago-oculto'" th:disabled="${!esTarjeta}">
+                    <legend>Datos de la tarjeta</legend>
+
+                    <div class="pago-campo pago-campo--full">
+                        <label for="numeroTarjeta">Número de tarjeta *</label>
+                        <div class="pago-input-marca">
+                            <input type="text" id="numeroTarjeta" name="numeroTarjeta" inputmode="numeric"
+                                   autocomplete="cc-number" placeholder="0000 0000 0000 0000" maxlength="23">
+                            <span id="marcaTarjeta" class="pago-marca" aria-live="polite"></span>
+                        </div>
+                        <small class="pago-error" data-error-for="numeroTarjeta"
+                               th:text="${#fields.hasErrors('numeroTarjeta') ? #fields.errors('numeroTarjeta')[0] : ''}"></small>
+                    </div>
+
+                    <div class="pago-campo pago-campo--full">
+                        <label for="titular">Titular de la tarjeta *</label>
+                        <input type="text" id="titular" name="titular" autocomplete="cc-name"
+                               placeholder="Como figura en la tarjeta" maxlength="100" th:value="*{titular}">
+                        <small class="pago-error" data-error-for="titular"
+                               th:text="${#fields.hasErrors('titular') ? #fields.errors('titular')[0] : ''}"></small>
+                    </div>
+
+                    <div class="pago-campo">
+                        <label for="expiracion">Expiración *</label>
+                        <input type="text" id="expiracion" name="expiracion" inputmode="numeric"
+                               autocomplete="cc-exp" placeholder="MM/AA" maxlength="5" th:value="*{expiracion}">
+                        <small class="pago-error" data-error-for="expiracion"
+                               th:text="${#fields.hasErrors('expiracion') ? #fields.errors('expiracion')[0] : ''}"></small>
+                    </div>
+
+                    <div class="pago-campo">
+                        <label for="cvv">CVV *</label>
+                        <input type="password" id="cvv" name="cvv" inputmode="numeric" autocomplete="cc-csc"
+                               placeholder="123" maxlength="4">
+                        <small class="pago-error" data-error-for="cvv"
+                               th:text="${#fields.hasErrors('cvv') ? #fields.errors('cvv')[0] : ''}"></small>
+                    </div>
+
+                    <p class="pago-seguridad pago-campo--full">&#128274; Por tu seguridad solo guardamos los últimos 4
+                        dígitos de la tarjeta. El CVV nunca se almacena.</p>
+                </fieldset>
+
+                <!-- Campos de PLIN / YAPE: QR + número de operación -->
+                <fieldset id="seccionQr" class="pago-card pago-seccion"
+                          th:classappend="${!esBilletera} ? 'pago-oculto'" th:disabled="${!esBilletera}"
+                          th:attr="data-qr-yape=@{/img/qr-yape.jpg},data-qr-plin=@{/img/qr-plin.jpg}">
+                    <legend>Pago con QR</legend>
+
+                    <div id="qrContenedor" class="pago-qr pago-campo--full">
+                        <div class="pago-qr__marco">
+                            <img id="qrImagen" class="pago-qr__img" alt="Código QR" width="200" height="200">
+                            <p id="qrError" class="pago-qr__error pago-oculto">No se pudo cargar el código QR. Intenta
+                                recargar la página.</p>
+                        </div>
+                        <div class="pago-qr__texto">
+                            <h3 id="qrTitulo">Paga con Yape</h3>
+                            <ol id="qrPasos" class="pago-qr__pasos"></ol>
+                        </div>
+                    </div>
+
+                    <div class="pago-campo pago-campo--full">
+                        <label for="numeroOperacion">Número de operación *</label>
+                        <input type="text" id="numeroOperacion" name="numeroOperacion" placeholder="Ej. 12345678"
+                               maxlength="20" autocomplete="off" th:value="*{numeroOperacion}">
+                        <small class="pago-ayuda">Lo encuentras en el comprobante de tu app después de pagar.</small>
+                        <small class="pago-error" data-error-for="numeroOperacion"
+                               th:text="${#fields.hasErrors('numeroOperacion') ? #fields.errors('numeroOperacion')[0] : ''}"></small>
+                    </div>
+                </fieldset>
+
+                <!-- Botones de acción -->
+                <div class="pago-acciones">
+                    <button type="submit" id="btnPagar" class="pago-btn-guardar">Registrar método de pago</button>
+                    <a class="pago-btn-cancelar" th:href="@{/welcome}">Cancelar</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- ============ COLUMNA DERECHA: métodos registrados ============ -->
+        <aside class="pago-col">
+            <section class="pago-card pago-lista">
+                <h2>Mis métodos registrados</h2>
+
+                <p class="pago-vacio" th:if="${#lists.isEmpty(metodosPago)}">Aún no registraste ningún método de pago.</p>
+
+                <ul th:unless="${#lists.isEmpty(metodosPago)}">
+                    <li class="pago-item" th:each="m : ${metodosPago}">
+                        <span class="pago-item__icono" th:text="${m.icono}">&#128179;</span>
+                        <div class="pago-item__info">
+                            <strong th:text="${m.tipoEtiqueta}">Tarjeta</strong>
+                            <span th:text="${m.detalle}">VISA •••• 4242</span>
+                            <small th:text="${#temporals.format(m.fechaRegistro, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</small>
+                        </div>
+                        <div class="pago-item__acciones">
+                            <span class="pago-badge" th:classappend="${'pago-badge--' + m.estadoCss}"
+                                  th:text="${m.estadoEtiqueta}">Activo</span>
+                            <a class="pago-item__comprobante" th:href="@{/welcome/pagos/comprobante/{id}(id=${m.id})}">Ver comprobante</a>
+                            <form th:action="@{/welcome/pagos/{id}/eliminar(id=${m.id})}" method="post"
+                                  onsubmit="return confirm('¿Eliminar este método de pago?');">
+                                <button type="submit" class="pago-item__eliminar" aria-label="Eliminar método de pago"
+                                        title="Eliminar">&times;</button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+    </div>
+
+    <script th:src="@{/js/metodoPago.js}" defer></script>
+</div>

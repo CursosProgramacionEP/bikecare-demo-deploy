@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+    <!--
+      USO (una sola línea, en cualquier vista, dentro del <body>):
+        <th:block th:replace="~{fragments/alerts :: messages}"></th:block>
+    -->
+    <th:block th:fragment="messages">
+        <link rel="stylesheet" th:href="@{/css/shared-alerts.css}">
+        <script th:src="@{/js/shared-alerts.js}" defer></script>
+
+        <th:block th:if="${appMessages != null and !appMessages.isEmpty()}"
+                  th:with="enLinea=${appMessages.?[!modal]}, modales=${appMessages.?[modal]}">
+
+            <!-- Alertas en línea (éxito, advertencia, info, error) -->
+            <div class="app-alerts" aria-live="polite" th:if="${!enLinea.isEmpty()}">
+                <div th:each="m : ${enLinea}" class="app-alert" th:classappend="${'app-alert--' + m.type.css}"
+                     th:attr="role=${m.type.css == 'error' ? 'alert' : 'status'},data-autoclose=${m.type.css == 'success' or m.type.css == 'info'}">
+                    <div class="app-alert__body">
+                        <strong th:text="${m.title}">Título</strong>
+                        <span th:text="${m.text}">Mensaje</span>
+                    </div>
+                    <button type="button" class="app-alert__close" aria-label="Cerrar" data-close-alert>&times;</button>
+                </div>
+            </div>
+
+            <!-- Modal de error (se abre solo al cargar la página) -->
+            <dialog id="appModal" class="app-modal" th:if="${!modales.isEmpty()}">
+                <div class="app-modal__box">
+                    <div th:each="m : ${modales}" class="app-modal__item" th:classappend="${'app-modal__item--' + m.type.css}">
+                        <h2 th:text="${m.title}">Título</h2>
+                        <p th:text="${m.text}">Mensaje</p>
+                    </div>
+                    <form method="dialog">
+                        <button type="submit" class="app-modal__btn">Entendido</button>
+                    </form>
+                </div>
+            </dialog>
+        </th:block>
+    </th:block>
+
+    <!--
+      Lista de notificaciones del sistema:
+        <div th:replace="~{fragments/alerts :: notificationList(${notificaciones})}"></div>
+    -->
+    <section th:fragment="notificationList(items)" class="app-notifications" aria-label="Notificaciones">
+        <link rel="stylesheet" th:href="@{/css/shared-alerts.css}">
+        <p class="app-notifications__empty" th:if="${#lists.isEmpty(items)}">No tienes notificaciones pendientes.</p>
+        <ul th:unless="${#lists.isEmpty(items)}">
+            <li th:each="n : ${items}" class="app-notification" th:classappend="${'app-notification--' + n.type.css}">
+                <div class="app-notification__head">
+                    <strong th:text="${n.title}">Título</strong>
+                    <small th:text="${#temporals.format(n.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</small>
+                </div>
+                <p th:text="${n.message}">Mensaje</p>
+                <form th:action="@{/welcome/garaje/notificaciones/{id}/leer(id=${n.id})}" method="post">
+                    <button type="submit" class="app-notification__btn">Marcar como leída</button>
+                </form>
+            </li>
+        </ul>
+    </section>
+
+</body>
+
+</html>

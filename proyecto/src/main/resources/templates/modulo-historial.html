@@ -1,0 +1,87 @@
+<div th:fragment="moduloHistorial" class="contenedor-modulo">
+    <link rel="stylesheet" th:href="@{/css/styleHistorial.css}">
+    
+    <header class="historial-header">
+        <div>
+            <h1>Historial de Mantenimientos</h1>
+            <p>Consulta los servicios preventivos y correctivos realizados a tus bicicletas.</p>
+        </div>
+        <!-- Filtro por bicicleta -->
+        <form th:action="@{/welcome/historial}" method="get" class="filtro-form">
+            <select name="biciId" class="select-filtro" onchange="this.form.submit()">
+                <option value="">Todas las bicicletas</option>
+                <option th:each="b : ${bicicletas}" 
+                        th:value="${b.idBicicleta}" 
+                        th:selected="${biciSeleccionadaId != null and b.idBicicleta == biciSeleccionadaId}"
+                        th:text="${b.marca + ' ' + b.modelo}">
+                    Trek Marlin 8
+                </option>
+            </select>
+        </form>
+    </header>
+
+    <!-- HU13: Tarjeta de Costos Acumulados y Botón de Exportación -->
+<div style="display: flex; justify-content: space-between; align-items: center; background-color: #ffffff; padding: 20px 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-top: 20px; margin-bottom: 24px; border: 1px solid #e2e8f0;">
+    <div>
+        <span style="color: #64748b; font-size: 14px; font-weight: 500;">Costo Total Acumulado</span>
+        <h2 style="margin: 6px 0 0 0; color: #0f172a; font-size: 28px; font-weight: 700;">
+            S/ <span th:text="${#numbers.formatDecimal(costoTotal != null ? costoTotal : 0, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+        </h2>
+    </div>
+
+    <div>
+        <a th:href="@{/welcome/historial/exportar}" 
+           style="background-color: #2563eb; color: #ffffff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: background-color 0.2s;"
+           onmouseover="this.style.backgroundColor='#1d4ed8'" 
+           onmouseout="this.style.backgroundColor='#2563eb'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Exportar Reporte (.csv)
+        </a>
+    </div>
+</div>
+
+    <!-- Estado vacío -->
+    <div class="historial-vacio" th:if="${#lists.isEmpty(historial)}">
+        <div class="vacio-icono">🔧</div>
+        <h2>No hay registros de mantenimiento</h2>
+        <p>Aún no se han registrado mantenimientos para el filtro seleccionado.</p>
+    </div>
+
+    <!-- Tabla con datos -->
+    <div class="tabla-contenedor" th:unless="${#lists.isEmpty(historial)}">
+        <table class="tabla-mantenimiento">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Bicicleta</th>
+                    <th>Servicio / Pieza</th>
+                    <th>Odómetro</th>
+                    <th>Taller / Mecánico</th>
+                    <th>Costo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="m : ${historial}">
+                    <td th:text="${#temporals.format(m.fechaServicio, 'dd/MM/yyyy')}">15/10/2026</td>
+                    <td>
+                        <strong th:text="${m.bicicleta.marca + ' ' + m.bicicleta.modelo}">Trek Marlin 8</strong>
+                    </td>
+                    <td>
+                        <div class="servicio-info">
+                            <span class="tipo-badge" th:text="${m.tipoServicio}">Ajuste General</span>
+                            <small th:if="${m.componente != null}" th:text="${'Pieza: ' + m.componente.nombre}">Pieza: Cadena</small>
+                            <p class="servicio-desc" th:if="${m.descripcion != null and !m.descripcion.isBlank()}" th:text="${m.descripcion}">Detalle...</p>
+                        </div>
+                    </td>
+                    <td th:text="${#numbers.formatDecimal(m.kilometrajeServicio, 1, 'COMMA', 1, 'POINT') + ' km'}">1,250.0 km</td>
+                    <td th:text="${m.tallerMecanico != null ? m.tallerMecanico : 'Particular'}">Taller Central</td>
+                    <td class="col-costo" th:text="${'S/ ' + (m.costo != null ? #numbers.formatDecimal(m.costo, 1, 'COMMA', 2, 'POINT') : '0.00')}">S/ 45.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

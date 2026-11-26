@@ -1,0 +1,39 @@
+name: Pruebas Automáticas CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: 123A
+          MYSQL_DATABASE: bikecare_db
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping -h localhost" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v5
+
+      - name: Configurar Java (JDK 24)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '24'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Ejecutar pruebas con Maven
+        run: mvn clean test
+        working-directory: ./proyecto
+        env:
+          DB_USER: root
+          DB_PASSWORD: 123A

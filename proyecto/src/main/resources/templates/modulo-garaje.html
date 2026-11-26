@@ -1,0 +1,96 @@
+<div th:fragment="moduloGaraje" class="contenedor-modulo">
+    <link rel="stylesheet" th:href="@{/css/styleGaraje.css}">
+    <div class="container-garaje">
+        <main id="page-content" class="view">
+            <div class="view-header">
+                <div>
+                    <h1 class="view-title">Mi Garaje</h1>
+                    <p class="view-subtitle">Gestiona el estado y mantenimiento de tu flota.</p>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                    <!-- Si es Premium o tiene menos de 2 bicis, muestra el botón normal -->
+                    <a th:if="${usuario.esPremium or #lists.size(bicicletas) < 2}"
+                       th:href="@{/welcome/garaje/registrarBici}" class="btn-primary">+ Añadir Bicicleta</a>
+
+                    <!-- Si alcanzó el límite gratuito, muestra botón bloqueado hacia Upgrade -->
+                    <a th:unless="${usuario.esPremium or #lists.size(bicicletas) < 2}"
+                       th:href="@{/welcome/pagos}" class="btn-secondary"
+                       title="Has alcanzado el límite de 2 bicicletas en el plan gratuito">
+                        🔒 Límite alcanzado (Upgrade a Pro)
+                    </a>
+
+                    <a th:href="@{/welcome/garaje/reporte}" class="btn-secondary"
+                       th:if="${not #lists.isEmpty(bicicletas)}">📄 Descargar reporte</a>
+                </div>
+            </div>
+
+            <!-- Aún no hay bicis -->
+            <div class="garaje-vacio" th:if="${#lists.isEmpty(bicicletas)}">
+                <div class="garaje-vacio-icono">🚲</div>
+                <h2>Tu garaje está vacío</h2>
+                <p>Añade tu primera bicicleta para empezar a controlar el mantenimiento de sus componentes.</p>
+            </div>
+
+            <div id="bikeGrid" class="bike-grid" th:unless="${#lists.isEmpty(bicicletas)}">
+                <!-- Un card por cada bicicleta del usuario -->
+                <article class="bike-card" th:each="card : ${bicicletas}" th:with="b=${card.bicicleta}">
+                    <img th:if="${b.foto != null}" class="bike-card-image"
+                        th:src="@{/uploads/bicicletas/{archivo}(archivo=${b.foto})}"
+                        th:alt="${b.marca + ' ' + b.modelo}">
+                    <div th:unless="${b.foto != null}" class="bike-card-image bike-card-placeholder">🚲</div>
+                    <div class="bike-card-body">
+                        <div class="bike-card-header">
+                            <h3 class="bike-card-title" th:text="${b.marca + ' ' + b.modelo}">Trek Marlin 8</h3>
+                            <span class="bike-badge" th:text="${b.estado}">activa</span>
+                        </div>
+                        <div class="bike-card-meta">
+                            <span th:text="${b.tipo + (b.anio != null ? ' · ' + b.anio : '')}">Montaña · 2021</span>
+                            <span
+                                th:text="${#numbers.formatDecimal(b.kilometrajeTotal, 1, 'COMMA', 1, 'POINT') + ' km recorridos'}">1,250.0
+                                km recorridos</span>
+                            <span th:if="${b.terrenoHabitual != null}" th:text="${'Terreno: ' + b.terrenoHabitual}">Terreno:
+                                Mixto</span>
+                        </div>
+                        <!-- Componentes monitoreados (desgaste por kilometraje) -->
+                        <div class="bike-components">
+                            <div class="bike-components-title">
+                                Componentes (<span th:text="${#lists.size(card.componentes)}">0</span>)
+                            </div>
+                            <p class="bike-components-empty" th:if="${#lists.isEmpty(card.componentes)}">
+                                Aún no monitoreas ningún componente.
+                            </p>
+                            <div class="component-row" th:each="c : ${card.componentes}">
+                                <div class="component-row-top">
+                                    <span class="component-name" th:text="${c.icono + ' ' + c.nombre}">⛓️ Cadena</span>
+                                    <span class="component-tag" th:classappend="${'component-tag--' + c.nivel}"
+                                        th:text="${c.etiqueta}">Buen estado</span>
+                                </div>
+                                <div class="progress" th:if="${c.limiteKm > 0}">
+                                    <div class="progress-bar" th:classappend="${'progress-bar--' + c.nivel}"
+                                        th:style="${'width:' + c.porcentajeBarra + '%'}"></div>
+                                </div>
+                                <div class="component-km"
+                                    th:text="${c.limiteKm > 0 ? c.kmUsados + ' / ' + c.limiteKm + ' km' : c.kmUsados + ' km'}">
+                                    120 / 3000 km</div>
+                                <!-- Editor del límite por km: SOLO visible para el rol Taller.
+                                     Publica a UmbralController.guardarLimite con el idBc del componente. -->
+                                <form class="umbral-edit" th:if="${esTaller}"
+                                      th:action="@{/welcome/componentes/{idBc}/umbral(idBc=${c.idBc})}"
+                                      method="post" title="Solo Taller: ajustar límite por kilometraje">
+                                    <label th:for="${'limite_' + c.idBc}">Límite (km)</label>
+                                    <input type="number" th:id="${'limite_' + c.idBc}" name="limiteKm"
+                                           th:value="${c.limiteKm > 0 ? c.limiteKm : ''}"
+                                           placeholder="3000" min="50" max="100000" step="1" required>
+                                    <button type="submit">Guardar</button>
+                                </form>
+                            </div>
+                        </div>
+                        <a class="btn-card" th:href="@{/welcome/garaje/{id}/componentes(id=${b.idBicicleta})}"
+                            th:text="${#lists.isEmpty(card.componentes) ? '+ Añadir componentes' : '+ Añadir más componentes'}">+
+                            Añadir componentes</a>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+</div>

@@ -1,0 +1,432 @@
+/* ============================================================
+   Variables del Sistema BikeCare
+   ============================================================ */
+:root {
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-900: #0f172a;
+  --emerald-100: #d1fae5;
+  --emerald-700: #047857;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ============================================================
+   Contenedor y Vista del Garaje
+   ============================================================ */
+.container-garaje {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Regla para mostrar la vista cuando JS le quita el atributo hidden */
+.view:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ============================================================
+   Encabezado de la Vista
+   ============================================================ */
+.view-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.view-title {
+  margin: 0;
+  font-family: var(--font-main);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--slate-900);
+  letter-spacing: -0.02em;
+}
+
+.view-subtitle {
+  margin: 4px 0 0;
+  font-family: var(--font-main);
+  font-size: 14px;
+  color: var(--slate-500);
+}
+
+/* Botón Añadir Bicicleta (Etiqueta <a>) */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--blue-600);
+  color: #ffffff;
+  font-family: var(--font-main);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover {
+  background: var(--blue-700);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Botón secundario (Descargar reporte) */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  color: var(--slate-700);
+  font-family: var(--font-main);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  border: 1px solid var(--slate-200);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--slate-100);
+  border-color: var(--slate-300);
+}
+
+/* ============================================================
+   Grid de Bicicletas
+   ============================================================ */
+.bike-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  width: 100%;
+}
+
+/* ============================================================
+   Estilos recomendados para las tarjetas que generará garaje.js
+   ============================================================ */
+.bike-card {
+  background: #ffffff;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.bike-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--slate-300);
+  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08);
+}
+
+.bike-card-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background-color: var(--slate-100);
+}
+
+.bike-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.bike-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.bike-card-title {
+  margin: 0;
+  font-family: var(--font-main);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--slate-900);
+}
+
+.bike-badge {
+  font-family: var(--font-main);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: var(--emerald-100);
+  color: var(--emerald-700);
+}
+
+.bike-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-main);
+  font-size: 13px;
+  color: var(--slate-500);
+}
+
+.bike-card-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+}
+
+/* ============================================================
+   Estado vacío del garaje
+   ============================================================ */
+.garaje-vacio {
+  background: #ffffff;
+  border: 1px dashed var(--slate-300);
+  border-radius: var(--radius-xl);
+  padding: 48px 24px;
+  text-align: center;
+  font-family: var(--font-main);
+}
+
+.garaje-vacio-icono {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.garaje-vacio h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--slate-900);
+}
+
+.garaje-vacio p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--slate-500);
+}
+
+/* ============================================================
+   Componentes dentro de cada tarjeta
+   ============================================================ */
+.bike-components {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+}
+
+.bike-components-title {
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-700);
+}
+
+.bike-components-empty {
+  margin: 0;
+  font-family: var(--font-main);
+  font-size: 13px;
+  color: var(--slate-500);
+}
+
+.component-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 0;
+  border-top: 1px solid var(--slate-200);
+}
+
+.component-row:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.component-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.component-name {
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-700);
+}
+
+.component-tag {
+  font-family: var(--font-main);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.component-tag--ok {
+  background: var(--emerald-100);
+  color: var(--emerald-700);
+}
+
+.component-tag--alerta {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.component-tag--critico {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.progress {
+  height: 6px;
+  background: var(--slate-200);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: 9999px;
+}
+
+.progress-bar--ok {
+  background: #10b981;
+}
+
+.progress-bar--alerta {
+  background: #f59e0b;
+}
+
+.progress-bar--critico {
+  background: #ef4444;
+}
+
+.component-km {
+  font-family: var(--font-main);
+  font-size: 12px;
+  color: var(--slate-500);
+}
+
+/* ============================================================
+   Botón + Añadir componentes dentro de la tarjeta
+   ============================================================ */
+.btn-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+  background: var(--blue-600);
+  color: #ffffff;
+  font-family: var(--font-main);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn-card:hover {
+  background: var(--blue-700);
+}
+
+.btn-card:active {
+  transform: scale(0.98);
+}
+
+/* ============================================================
+   Editor de límite por km — solo rol Taller (discreto)
+   ============================================================ */
+.umbral-edit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.umbral-edit label {
+  font-family: var(--font-main);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--slate-500);
+  white-space: nowrap;
+}
+
+.umbral-edit input {
+  width: 110px;
+  padding: 6px 8px;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-md);
+  font-family: var(--font-main);
+  font-size: 13px;
+  color: var(--slate-900);
+  outline: none;
+}
+
+.umbral-edit input:focus {
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.umbral-edit button {
+  background: var(--slate-100);
+  color: var(--slate-700);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-md);
+  padding: 6px 12px;
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.umbral-edit button:hover {
+  background: var(--slate-200);
+}
+
+/* ============================================================
+   Diseño Responsivo
+   ============================================================ */
+@media (max-width: 640px) {
+  .view-header {
+    flex-direction: column;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+
+  .bike-grid {
+    grid-template-columns: 1fr;
+  }
+}

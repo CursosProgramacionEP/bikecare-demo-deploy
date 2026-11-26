@@ -1,0 +1,215 @@
+/* ============================================================
+   Variables de diseño (BikeCare)
+   ============================================================ */
+:root {
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-900: #0f172a;
+  --red-500: #ef4444;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+
+/* ============================================================
+   Reset básico
+   ============================================================ */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--slate-50);
+}
+
+/* ============================================================
+   Contenedor principal
+   ============================================================ */
+/* Soporta tanto <div register-conteiner> como <div class="register-conteiner"> */
+[register-conteiner], .register-conteiner {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(180deg, var(--slate-50) 0%, var(--slate-100) 100%);
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   Tarjeta de Registro
+   ============================================================ */
+.register-card {
+  width: 100%;
+  max-width: 450px; /* Un poco más ancha que el login porque tiene más campos */
+  background: #fff;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-xl);
+  padding: 40px 32px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* ============================================================
+   Cabecera
+   ============================================================ */
+.register-card header {
+  text-align: center;
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.register-card header img {
+  height: 45px;
+  width: auto;
+  margin-bottom: 16px;
+  border-radius: 8px;
+}
+
+.register-card header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--slate-900);
+}
+
+.register-subtitle {
+  margin: 6px 0 0 0;
+  font-size: 14px;
+  color: var(--slate-500);
+}
+
+/* ============================================================
+   Formulario y Grupos de Inputs
+   ============================================================ */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 14px;
+  color: var(--slate-700);
+  font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+  width: 100%;
+  border: 1px solid var(--slate-200);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--slate-700);
+  background: #fff;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.form-group input::placeholder {
+  color: var(--slate-300);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Wrapper de contraseña (por si luego agregas el ícono del "ojito") */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Mensajes de error */
+.error-message {
+  font-size: 12px;
+  color: var(--red-500);
+  margin-top: 2px;
+}
+.error-message:empty {
+  display: none;
+}
+
+/* ============================================================
+   Opciones de formulario (Checkbox y Enlaces)
+   ============================================================ */
+.form-options {
+  margin-top: 4px;
+  padding-top: 16px;
+  border-top: 1px solid var(--slate-100);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--slate-600);
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.checkbox-label a {
+  color: var(--blue-600);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.checkbox-label a:hover {
+  color: var(--blue-700);
+  text-decoration: underline;
+}
+
+/* ============================================================
+   Botón Principal (Opcional - Recomendado agregar al HTML)
+   ============================================================ */
+.btn-submit {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--blue-600);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: 8px;
+  font-family: inherit;
+}
+
+.btn-submit:hover {
+  background: var(--blue-700);
+}
+
+
+.register-footer{
+    text-align: center;
+}

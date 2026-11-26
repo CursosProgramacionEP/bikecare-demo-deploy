@@ -1,0 +1,144 @@
+<!-- ============================================================================
+     PANEL DE CONTROL — fragmento Thymeleaf "panelContet".
+     Lo inserta welcome.html cuando moduloActivo == 'panelControl'.
+     Datos que envía PanelControlController:
+       totalBicis, kmTotales, totalAlertas,
+       bicicletas (List<Bicicleta>), biciSeleccionada,
+       componentesSel, alertasSel.
+     ========================================================================== -->
+<div th:fragment="panelContet" class="container-panel">
+    <link rel="stylesheet" th:href="@{/css/stylePanelControl.css}">
+
+    <!-- Encabezado: mensaje distinto si hay o no bicis -->
+    <header class="header">
+        <div class="title-area">
+            <h1>Panel de Control</h1>
+            <!-- Caso A: usuario nuevo sin bicis -->
+            <p th:if="${totalBicis == 0}">No hay bicicletas registradas aún.</p>
+            <!-- Caso B: resumen con el total real -->
+            <p th:unless="${totalBicis == 0}"
+               th:text="${'Tienes ' + totalBicis + (totalBicis == 1 ? ' bicicleta registrada.' : ' bicicletas registradas.')}">
+                Tienes 2 bicicletas registradas.
+            </p>
+        </div>
+    </header>
+
+    <!-- Tarjetas de resumen superior (3 rectángulos) -->
+    <section class="stats-grid">
+        <!-- 1) Número de bicis del usuario -->
+        <div class="stat-card">
+            <div class="stat-icon">🚲</div>
+            <div class="stat-info">
+                <div class="number" th:text="${totalBicis}">0</div>
+                <div class="label">Bicicletas</div>
+            </div>
+        </div>
+
+        <!-- 2) Suma de todos los odómetros (kilometraje_total) -->
+        <div class="stat-card">
+            <div class="stat-icon">📏</div>
+            <div class="stat-info">
+                <div class="number" th:text="${#numbers.formatDecimal(kmTotales, 1, 'COMMA', 1, 'POINT') + ' km'}">0 km</div>
+                <div class="label">Kilómetros totales</div>
+            </div>
+        </div>
+
+        <!-- 3) Componentes en alerta/crítico por kilometraje -->
+        <div class="stat-card">
+            <div class="stat-icon">🔧</div>
+            <div class="stat-info">
+                <div class="number" th:text="${totalAlertas}">0</div>
+                <div class="label">Alertas de servicio</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección principal inferior: detalle por bici + estado -->
+    <section class="main-grid">
+
+        <!-- Tarjeta izquierda: resumen de la bici elegida en el desplegable -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Resumen de actividad</h2>
+
+                <!-- Desplegable: hace GET a /welcome/panelControl?biciId=NN y recarga.
+                     onchange submit evita usar JavaScript extra. -->
+                <form th:action="@{/welcome/panelControl}" method="get" style="margin:0;">
+                    <select name="biciId" class="select-bici" onchange="this.form.submit()">
+                        <!-- Placeholder cuando no hay bicis -->
+                        <option th:if="${#lists.isEmpty(bicicletas)}" value="" disabled selected>
+                            Sin bicicletas...
+                        </option>
+                        <!-- Una opción por bici: "Marca Modelo (1,250 km)" -->
+                        <option th:each="b : ${bicicletas}"
+                                th:value="${b.idBicicleta}"
+                                th:selected="${biciSeleccionada != null and b.idBicicleta == biciSeleccionada.idBicicleta}"
+                                th:text="${b.marca + ' ' + b.modelo}">
+                            Trek Marlin 8
+                        </option>
+                    </select>
+                </form>
+            </div>
+
+            <!-- Si no hay bici seleccionada (garaje vacío), mostrar aviso -->
+            <div class="activity-stats" th:if="${biciSeleccionada == null}">
+                <div class="stat-item">
+                    <div class="item-label">Estado</div>
+                    <div class="item-value" style="font-size:16px;">Registra tu primera bici en Mi Garaje</div>
+                </div>
+            </div>
+
+            <!-- Detalle de la bici seleccionada -->
+            <div class="activity-stats" th:unless="${biciSeleccionada == null}">
+                <!-- Km de ESTA bici (su odómetro) -->
+                <div class="stat-item">
+                    <div class="item-label">Kilómetros totales</div>
+                    <div class="item-value"
+                         th:text="${#numbers.formatDecimal(biciSeleccionada.kilometrajeTotal, 1, 'COMMA', 1, 'POINT') + ' km'}">0 km</div>
+                </div>
+                <!-- Terreno habitual (puede ser null → mostrar "—") -->
+                <div class="stat-item">
+                    <div class="item-label">Terreno predominante</div>
+                    <div class="item-value"
+                         th:text="${biciSeleccionada.terrenoHabitual != null ? biciSeleccionada.terrenoHabitual : '—'}">—</div>
+                </div>
+                <!-- Cuántos componentes se monitorean en esta bici -->
+                <div class="stat-item">
+                    <div class="item-label">Componentes monitoreados</div>
+                    <div class="item-value" th:text="${#lists.size(componentesSel)}">0</div>
+                </div>
+                <!-- Cuántos de esos componentes piden servicio -->
+                <div class="stat-item">
+                    <div class="item-label">Alertas en esta bici</div>
+                    <div class="item-value" th:text="${#lists.size(alertasSel)}">0</div>
+                </div>
+                <!-- NOTA: "Desnivel" y "Tiempo en movimiento" no existen en la BD actual,
+                     por eso se reemplazaron por métricas reales de kilometraje. -->
+            </div>
+        </div>
+
+        <!-- Tarjeta derecha: estado general. Verde si todo ok, avisa si hay alertas. -->
+        <!-- Caso OK: ningún componente en alerta/crítico -->
+        <div class="alert-card" th:if="${totalAlertas == 0}">
+            <div class="alert-icon">✓</div>
+            <div class="alert-title">Sin alertas</div>
+            <div class="alert-subtitle">Todos los componentes están en buen estado.</div>
+        </div>
+
+        <!-- Caso con alertas: muestra cuántas y las peores de la bici seleccionada -->
+        <div class="alert-card" th:unless="${totalAlertas == 0}"
+             style="background:#fef3c7;border-color:#fde68a;">
+            <div class="alert-icon" style="background:#f59e0b;color:#fff;">!</div>
+            <div class="alert-title" th:text="${totalAlertas + (totalAlertas == 1 ? ' alerta de servicio' : ' alertas de servicio')}">3 alertas de servicio</div>
+            <div class="alert-subtitle">
+                <!-- Lista corta: "⛓ Cadena — Reemplazar" etc. -->
+                <span th:each="a, iter : ${alertasSel}"
+                      th:text="${a.icono + ' ' + a.nombre + ' — ' + a.etiqueta + (iter.last ? '' : ', ')}">Cadena — Revisar</span>
+                <span th:if="${#lists.isEmpty(alertasSel)}">Revisa el desgaste por kilometraje en Mi Garaje.</span>
+            </div>
+            <a th:href="@{/welcome/garaje}" class="btn-secondary"
+               style="margin-top:12px;text-decoration:none;">Ver en Mi Garaje</a>
+        </div>
+
+    </section>
+</div>

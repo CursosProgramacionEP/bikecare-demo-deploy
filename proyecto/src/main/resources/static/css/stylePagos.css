@@ -1,0 +1,540 @@
+/* ============================================================
+   Módulo Métodos de pago (HU-14)
+   Todo está acotado a .modulo-pagos para no pisar otros módulos.
+   Variables y medidas iguales a styleAddBici.css.
+   ============================================================ */
+.modulo-pagos {
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --blue-50: #eff6ff;
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-900: #0f172a;
+  --red-50: #fef2f2;
+  --red-500: #ef4444;
+  --emerald-100: #d1fae5;
+  --emerald-700: #047857;
+  --amber-100: #fef3c7;
+  --amber-700: #b45309;
+  --yape: #742284;
+  --plin: #0891b2;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  justify-self: center;
+  width: 100%;
+  max-width: 1040px;
+}
+
+.modulo-pagos *,
+.modulo-pagos *::before,
+.modulo-pagos *::after {
+  box-sizing: border-box;
+}
+
+.modulo-pagos .pago-oculto {
+  display: none !important;
+}
+
+/* ---------- Encabezado ---------- */
+.modulo-pagos .pago-header {
+  margin-bottom: 28px;
+}
+
+.modulo-pagos .pago-header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--slate-900);
+  letter-spacing: -0.02em;
+}
+
+.modulo-pagos .pago-header p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--slate-500);
+}
+
+/* ---------- Layout 2 columnas ---------- */
+.modulo-pagos .pago-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.modulo-pagos .pago-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---------- Tarjetas (fieldset) ---------- */
+.modulo-pagos .pago-card {
+  border: 1px solid var(--slate-200);
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  margin: 0;
+  min-width: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.modulo-pagos .pago-card legend {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--slate-900);
+  padding: 0 8px;
+  margin-left: -8px;
+}
+
+.modulo-pagos .pago-seccion {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+}
+
+.modulo-pagos .pago-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.modulo-pagos .pago-campo--full {
+  grid-column: 1 / -1;
+}
+
+.modulo-pagos label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--slate-700);
+}
+
+/* ---------- Inputs ---------- */
+.modulo-pagos input[type="text"],
+.modulo-pagos input[type="password"] {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--slate-900);
+  background-color: #ffffff;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.modulo-pagos input[type="text"]::placeholder,
+.modulo-pagos input[type="password"]::placeholder {
+  color: var(--slate-400);
+}
+
+.modulo-pagos input[type="text"]:focus,
+.modulo-pagos input[type="password"]:focus {
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.modulo-pagos input.pago-invalido {
+  border-color: var(--red-500);
+  background: var(--red-50);
+}
+
+.modulo-pagos input.pago-invalido:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.modulo-pagos .pago-input-marca {
+  position: relative;
+}
+
+.modulo-pagos .pago-input-marca input {
+  padding-right: 110px;
+}
+
+.modulo-pagos .pago-marca {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--slate-500);
+  pointer-events: none;
+}
+
+.modulo-pagos .pago-marca--visa { color: #1a1f71; }
+.modulo-pagos .pago-marca--mastercard { color: #eb001b; }
+.modulo-pagos .pago-marca--amex { color: #006fcf; }
+
+.modulo-pagos small {
+  color: var(--slate-500);
+  font-size: 12px;
+}
+
+.modulo-pagos .pago-error {
+  color: var(--red-500);
+  font-weight: 500;
+  min-height: 0;
+}
+
+.modulo-pagos .pago-error:empty {
+  display: none;
+}
+
+.modulo-pagos .pago-seguridad {
+  margin: 0;
+  font-size: 12px;
+  color: var(--slate-500);
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+}
+
+/* ---------- Selector de método ---------- */
+.modulo-pagos .pago-opciones {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.modulo-pagos .pago-opcion {
+  position: relative;
+  cursor: pointer;
+}
+
+.modulo-pagos .pago-opcion input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modulo-pagos .pago-opcion__box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 14px 8px;
+  border: 2px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  background: #ffffff;
+  text-align: center;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.modulo-pagos .pago-opcion:hover .pago-opcion__box {
+  border-color: var(--slate-300);
+  background: var(--slate-50);
+}
+
+.modulo-pagos .pago-opcion input:checked + .pago-opcion__box {
+  border-color: var(--blue-600);
+  background: var(--blue-50);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.modulo-pagos .pago-opcion input:checked + .pago-opcion__box--yape {
+  border-color: var(--yape);
+  background: #faf5fb;
+  box-shadow: 0 0 0 3px rgba(116, 34, 132, 0.14);
+}
+
+.modulo-pagos .pago-opcion input:checked + .pago-opcion__box--plin {
+  border-color: var(--plin);
+  background: #ecfeff;
+  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.14);
+}
+
+.modulo-pagos .pago-opcion input:focus-visible + .pago-opcion__box {
+  outline: 2px solid var(--blue-600);
+  outline-offset: 2px;
+}
+
+.modulo-pagos .pago-opcion__icono {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.modulo-pagos .pago-opcion__texto {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slate-900);
+}
+
+/* ---------- QR ---------- */
+.modulo-pagos .pago-qr {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  background: var(--slate-50);
+}
+
+.modulo-pagos .pago-qr--yape { border-color: var(--yape); }
+.modulo-pagos .pago-qr--plin { border-color: var(--plin); }
+
+.modulo-pagos .pago-qr__marco {
+  flex: 0 0 auto;
+  width: 200px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--slate-200);
+}
+
+.modulo-pagos .pago-qr__img {
+  display: block;
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+}
+
+.modulo-pagos .pago-qr__error {
+  margin: 0;
+  padding: 12px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--red-500);
+}
+
+.modulo-pagos .pago-qr__texto h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--slate-900);
+}
+
+.modulo-pagos .pago-qr--yape .pago-qr__texto h3 { color: var(--yape); }
+.modulo-pagos .pago-qr--plin .pago-qr__texto h3 { color: var(--plin); }
+
+.modulo-pagos .pago-qr__pasos {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--slate-600);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ---------- Botones ---------- */
+.modulo-pagos .pago-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modulo-pagos .pago-btn-guardar {
+  width: 100%;
+  background: var(--blue-600);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 20px;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.modulo-pagos .pago-btn-guardar:hover:not(:disabled) {
+  background: var(--blue-700);
+}
+
+.modulo-pagos .pago-btn-guardar:disabled {
+  background: var(--slate-300);
+  cursor: not-allowed;
+}
+
+.modulo-pagos .pago-btn-cancelar {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  color: var(--slate-500);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.modulo-pagos .pago-btn-cancelar:hover {
+  background: var(--slate-200);
+  color: var(--slate-700);
+}
+
+/* ---------- Lista de métodos registrados ---------- */
+.modulo-pagos .pago-lista h2 {
+  margin: 0 0 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--slate-900);
+}
+
+.modulo-pagos .pago-vacio {
+  margin: 0;
+  font-size: 13px;
+  color: var(--slate-500);
+}
+
+.modulo-pagos .pago-lista ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modulo-pagos .pago-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 12px;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  background: var(--slate-50);
+}
+
+.modulo-pagos .pago-item__icono {
+  grid-row: 1;
+}
+
+.modulo-pagos .pago-item__info {
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.modulo-pagos .pago-item__acciones {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.modulo-pagos .pago-item__icono {
+  font-size: 22px;
+}
+
+.modulo-pagos .pago-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.modulo-pagos .pago-item__info strong {
+  font-size: 13px;
+  color: var(--slate-900);
+}
+
+.modulo-pagos .pago-item__info span {
+  font-size: 12px;
+  color: var(--slate-600);
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.modulo-pagos .pago-item__comprobante {
+  font-size: 12px;
+  color: var(--blue-600, #2563eb);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+
+.modulo-pagos .pago-item__comprobante:hover {
+  background: var(--slate-100, #f1f5f9);
+  text-decoration: underline;
+}
+
+.modulo-pagos .pago-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.modulo-pagos .pago-badge--activo {
+  background: var(--emerald-100);
+  color: var(--emerald-700);
+}
+
+.modulo-pagos .pago-badge--pendiente {
+  background: var(--amber-100);
+  color: var(--amber-700);
+}
+
+.modulo-pagos .pago-item form {
+  margin: 0;
+}
+
+.modulo-pagos .pago-item__eliminar {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--slate-400);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.modulo-pagos .pago-item__eliminar:hover {
+  background: var(--red-50);
+  color: var(--red-500);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .modulo-pagos .pago-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .modulo-pagos .pago-seccion {
+    grid-template-columns: 1fr;
+  }
+
+  .modulo-pagos .pago-opciones {
+    grid-template-columns: 1fr;
+  }
+
+  .modulo-pagos .pago-qr {
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+  }
+}
