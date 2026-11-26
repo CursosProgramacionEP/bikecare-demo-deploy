@@ -18,6 +18,7 @@
                 <p class="register-subtitle">Completa tus datos para empezar</p>
             </header>
 
+            <p th:if="${param.existe}" class="error-message" role="alert" style="display:block;margin-bottom:12px">Ya existe una cuenta con ese correo. Inicia sesión o usa otro correo.</p>
             <form th:action="@{/registrar}" method="post" class="register-form">
                 <div class="form-group">
                     <label for="firstname">Nombre</label>

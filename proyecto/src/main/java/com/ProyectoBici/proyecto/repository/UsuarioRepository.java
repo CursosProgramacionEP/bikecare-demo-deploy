@@ -12,6 +12,7 @@ import com.ProyectoBici.proyecto.entity.Usuario;
 public interface UsuarioRepository 
 extends JpaRepository<Usuario,Integer>{
     Optional<Usuario> findByCorreo(String correo);
+    boolean existsByCorreoIgnoreCase(String correo);
     Optional<Usuario> findByResetToken(String resetToken);
 
     /** Todos los usuarios que tienen un rol con ese nombre (ignora mayúsculas). */

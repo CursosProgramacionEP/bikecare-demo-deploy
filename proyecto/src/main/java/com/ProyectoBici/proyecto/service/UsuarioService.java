@@ -60,6 +60,10 @@ public class UsuarioService {
                 || valor.startsWith("$2y$");
     }
 
+    public boolean existeCorreo(String correo) {
+        return correo != null && usuarioRepository.existsByCorreoIgnoreCase(correo.trim());
+    }
+
     public void guardarUsuario(
             String nombre,
             String apellidos,

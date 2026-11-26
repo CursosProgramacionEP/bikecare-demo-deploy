@@ -77,6 +77,11 @@ public class AuthController {
             @RequestParam("correo") String correo,
             @RequestParam("contrasenia") String contrasenia) {
                 
+        // Un correo solo puede registrarse una vez: con duplicados, el inicio
+        // de sesion falla porque findByCorreo devuelve dos resultados
+        if (usuarioService.existeCorreo(correo)) {
+            return "redirect:/registro?existe";
+        }
         usuarioService.guardarUsuario(nombre, apellidos, correo, contrasenia);
         return "redirect:/login";
     }
